@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Tienda de Libros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #444;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            padding: 10px;
+            width: 70%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .catalog {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .book {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+            transition: transform 0.2s;
+        }
+        .book:hover {
+            transform: translateY(-5px);
+        }
+        .book-img {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: filter 0.3s ease-in-out;
+        }
+        .book-img.bw-filter {
+            filter: grayscale(100%);
+        }
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .book-pages {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .book-price {
+            color: #007bff;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+        .book-format {
+            margin-bottom: 10px;
+        }
+        .book-format label, .book-binding label {
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .book-binding {
+            margin: 15px 0;
+        }
+        .add-to-cart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #0056b3;
+        }
+        .cart-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+        }
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        #cart-items li {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        #cart-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .payment-button {
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .payment-button img {
+            height: 25px;
+        }
+        #checkout-mp-button {
+            background-color: #00aee4;
+            color: white;
+        }
+        #checkout-mp-button:hover {
+            background-color: #008eb3;
+        }
+        #checkout-wa-button {
+            background-color: #25D366;
+            color: white;
+        }
+        #checkout-wa-button:hover {
+            background-color: #128C7E;
+        }
+
+	/* Estilos para el botón de cambio de tema */
+        #toggle-theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #toggle-theme-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* --- Estilos para el modo oscuro --- */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container {
+            background: #1e1e1e;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode h1, body.dark-mode h2 {
+            color: #bb86fc;
+        }
+
+        body.dark-mode #search-input {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-mode .book {
+            background: #2c2c2c;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .book-pages {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .book-price {
+            color: #89c4ff;
+        }
+        
+        body.dark-mode .cart-section {
+            border-top: 2px solid #555;
+        }
+
+        body.dark-mode #cart-items li {
+            background: #2c2c2c;
+        }
+
+        body.dark-mode .remove-btn {
+            background-color: #cf6679;
+        }
+
+        body.dark-mode #checkout-mp-button {
+            background-color: #03dac6;
+        }
+        body.dark-mode #checkout-mp-button:hover {
+            background-color: #018786;
+        }
+        body.dark-mode #checkout-wa-button {
+            background-color: #4CAF50;
+        }
+        body.dark-mode #checkout-wa-button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+ 	<button id="toggle-theme-btn">Modo Oscuro</button>
+    <h1>📚 Tienda de Libros</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Buscar libro...">
+    </div>
+
+    <hr>
+    
+    <h2>Catálogo</h2>
+    <div class="catalog">
+        <div class="book" data-title="El espejo africano" data-pages="34" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\El espejo africano.JPG" alt="Portada de El espejo africano" class="book-img bw-filter">
+            <h3 class="book-title">El espejo africano</h3>
+            <p class="book-pages">68 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-el-espejo" name="format-el-espejo" value="color">
+                <label for="color-el-espejo" class="color-label">Color</label>
+                <input type="radio" id="bw-el-espejo" name="format-el-espejo" value="bw" checked>
+                <label for="bw-el-espejo">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-el-espejo" class="anillado-checkbox">
+                <label for="anillado-el-espejo">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Mi planta de naranja lima" data-pages="48" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\Mi planta de naranja lima portada 2025.png" alt="Portada de Mi planta de naranja lima" class="book-img bw-filter">
+            <h3 class="book-title">Mi planta de naranja lima</h3>
+            <p class="book-pages">96 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-mi-planta" name="format-mi-planta" value="color">
+                <label for="color-mi-planta" class="color-label">Color</label>
+                <input type="radio" id="bw-mi-planta" name="format-mi-planta" value="bw" checked>
+                <label for="bw-mi-planta">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-mi-planta" class="anillado-checkbox">
+                <label for="anillado-mi-planta">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="El Eternauta" data-pages="89" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\El eternauta portada.png" alt="Portada de El Eternauta" class="book-img bw-filter">
+            <h3 class="book-title">El Eternauta</h3>
+            <p class="book-pages">353 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-el-eternauta" name="format-el-eternauta" value="color">
+                <label for="color-el-eternauta" class="color-label">Color</label>
+                <input type="radio" id="bw-el-eternauta" name="format-el-eternauta" value="bw" checked>
+                <label for="bw-el-eternauta">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-el-eternauta" class="anillado-checkbox">
+                <label for="anillado-el-eternauta">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="De como romeo se tranzo a julieta" data-pages="28" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\de como romeo se tranzo a julieta portada.JPG" alt="Portada de De como romeo se tranzo a julieta" class="book-img bw-filter">
+            <h3 class="book-title">De como romeo se tranzo a julieta</h3>
+            <p class="book-pages">112 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-romeo" name="format-romeo" value="color">
+                <label for="color-romeo" class="color-label">Color</label>
+                <input type="radio" id="bw-romeo" name="format-romeo" value="bw" checked>
+                <label for="bw-romeo">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-romeo" class="anillado-checkbox">
+                <label for="anillado-romeo">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Mitos clasificados 1" data-pages="45" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\mitos clasificados 1 portada.JPG" alt="Portada de Mitos clasificados 1" class="book-img bw-filter">
+            <h3 class="book-title">Mitos clasificados 1</h3>
+            <p class="book-pages">90 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-mitos" name="format-mitos" value="color">
+                <label for="color-mitos" class="color-label">Color</label>
+                <input type="radio" id="bw-mitos" name="format-mitos" value="bw" checked>
+                <label for="bw-mitos">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-mitos" class="anillado-checkbox">
+                <label for="anillado-mitos">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Prohibido suicidarse en primavera" data-pages="28" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\prohibido suicidarse en primavera portada.JPG" alt="Portada de Prohibido suicidarse en primavera" class="book-img bw-filter">
+            <h3 class="book-title">Prohibido suicidarse en primavera</h3>
+            <p class="book-pages">56 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-suicidio" name="format-suicidio" value="color">
+                <label for="color-suicidio" class="color-label">Color</label>
+                <input type="radio" id="bw-suicidio" name="format-suicidio" value="bw" checked>
+                <label for="bw-suicidio">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-suicidio" class="anillado-checkbox">
+                <label for="anillado-suicidio">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="La entrevista" data-pages="43" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\La entrevista portada.JPG" alt="Portada de La entrevista" class="book-img bw-filter">
+            <h3 class="book-title">La entrevista</h3>
+            <p class="book-pages">86 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-entrevista" name="format-entrevista" value="color">
+                <label for="color-entrevista" class="color-label">Color</label>
+                <input type="radio" id="bw-entrevista" name="format-entrevista" value="bw" checked>
+                <label for="bw-entrevista">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-entrevista" class="anillado-checkbox">
+                <label for="anillado-entrevista">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Boda de sangre" data-pages="19" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\boda de sangre portada.JPG" alt="Portada de Boda de sangre" class="book-img bw-filter">
+            <h3 class="book-title">Boda de sangre</h3>
+            <p class="book-pages">37 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-boda" name="format-boda" value="color">
+                <label for="color-boda" class="color-label">Color</label>
+                <input type="radio" id="bw-boda" name="format-boda" value="bw" checked>
+                <label for="bw-boda">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-boda" class="anillado-checkbox">
+                <label for="anillado-boda">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Amigos por el viento" data-pages="19" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\amigos por el viento.png" alt="Portada de Amigos por el viento" class="book-img bw-filter">
+            <h3 class="book-title">Amigos por el viento</h3>
+            <p class="book-pages">38 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-amigos" name="format-amigos" value="color">
+                <label for="color-amigos" class="color-label">Color</label>
+                <input type="radio" id="bw-amigos" name="format-amigos" value="bw" checked>
+                <label for="bw-amigos">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-amigos" class="anillado-checkbox">
+                <label for="anillado-amigos">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Ceremonia secreta" data-pages="29" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\ceremonia secreta.JPG" alt="Portada de Ceremonia secreta" class="book-img bw-filter">
+            <h3 class="book-title">Ceremonia secreta</h3>
+            <p class="book-pages">57 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-ceremonia" name="format-ceremonia" value="color">
+                <label for="color-ceremonia" class="color-label">Color</label>
+                <input type="radio" id="bw-ceremonia" name="format-ceremonia" value="bw" checked>
+                <label for="bw-ceremonia">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-ceremonia" class="anillado-checkbox">
+                <label for="anillado-ceremonia">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Casa de muñeca" data-pages="54" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\casa de muñecas.JPG"alt="Portada de Casa de muñeca" class="book-img bw-filter">
+            <h3 class="book-title">Casa de muñeca</h3>
+            <p class="book-pages">108 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-casa" name="format-casa" value="color">
+                <label for="color-casa" class="color-label">Color</label>
+                <input type="radio" id="bw-casa" name="format-casa" value="bw" checked>
+                <label for="bw-casa">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-casa" class="anillado-checkbox">
+                <label for="anillado-casa">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="La casa de Bernarda Alba" data-pages="25" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\La casa de bernarda alba 2025.png" alt="Portada de La casa de Bernarda Alba" class="book-img bw-filter">
+            <h3 class="book-title">La casa de Bernarda Alba</h3>
+            <p class="book-pages">50 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-bernarda" name="format-bernarda" value="color">
+                <label for="color-bernarda" class="color-label">Color</label>
+                <input type="radio" id="bw-bernarda" name="format-bernarda" value="bw" checked>
+                <label for="bw-bernarda">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-bernarda" class="anillado-checkbox">
+                <label for="anillado-bernarda">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="La increíble y triste historia de la cándida Eréndida y su abuela desalmada" data-pages="18" data-price-anillado="2000" data-color="false">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\La increíble y triste historia de la cándida Eréndida  y su abuela desalmada.JPG" alt="Portada de La increíble y triste historia de la cándida Eréndida y su abuela desalmada" class="book-img bw-filter">
+            <h3 class="book-title">La increíble y triste historia de la cándida Eréndida y su abuela desalmada</h3>
+            <p class="book-pages">36 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-erendida" name="format-erendida" value="color">
+                <label for="color-erendida" class="color-label">Color</label>
+                <input type="radio" id="bw-erendida" name="format-erendida" value="bw" checked>
+                <label for="bw-erendida">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-erendida" class="anillado-checkbox">
+                <label for="anillado-erendida">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+        <div class="book" data-title="Historia 3 Mandioca" data-pages="119" data-price-anillado="2000" data-color="true">
+            <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\Historia 3 Mandioca.PNG" alt="Portada de Historia 3 Mandioca" class="book-img">
+            <h3 class="book-title">Historia 3 Mandioca</h3>
+            <p class="book-pages">238 páginas</p>
+            <p class="book-price"></p>
+            <div class="book-format">
+                <input type="radio" id="color-historia3" name="format-historia3" value="color">
+                <label for="color-historia3" class="color-label">Color</label>
+                <input type="radio" id="bw-historia3" name="format-historia3" value="bw" checked>
+                <label for="bw-historia3">B/N</label>
+            </div>
+            <div class="book-binding">
+                <input type="checkbox" id="anillado-historia3" class="anillado-checkbox">
+                <label for="anillado-historia3">Anillado (+$2000)</label>
+            </div>
+            <button class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
+	<div class="book" data-title="Historia 3 Santillana" data-pages="118" data-price-anillado="2000" data-color="true">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\HISTORIA 3 SANTILLANA.JPG" alt="Portada de Historia 3 Santillana" class="book-img">
+    <h3 class="book-title">Historia 3 Santillana</h3>
+    <p class="book-pages">236 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-historia3-santillana" name="format-historia3-santillana" value="color">
+        <label for="color-historia3-santillana" class="color-label">Color</label>
+        <input type="radio" id="bw-historia3-santillana" name="format-historia3-santillana" value="bw" checked>
+        <label for="bw-historia3-santillana">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-historia3-santillana" class="anillado-checkbox">
+        <label for="anillado-historia3-santillana">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+
+	<div class="book" data-title="Buscando a mister i la amistad vence al bullyin" data-pages="48" data-price-anillado="2000" data-color="false">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\Buscando a mister I.JPG"alt="Portada de Buscando a mister i la amistad vence al bullyin" class="book-img bw-filter">
+    <h3 class="book-title">Buscando a mister i la amistad vence al bullyin</h3>
+    <p class="book-pages">96 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-mister-i" name="format-mister-i" value="color">
+        <label for="color-mister-i" class="color-label">Color</label>
+        <input type="radio" id="bw-mister-i" name="format-mister-i" value="bw" checked>
+        <label for="bw-mister-i">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-mister-i" class="anillado-checkbox">
+        <label for="anillado-mister-i">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+<div class="book" data-title="El diablo en la botella" data-pages="14" data-price-anillado="2000" data-color="true">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\el diablo de la botella .jpeg" alt="Portada de El diablo en la botella" class="book-img bw-filter">
+    <h3 class="book-title">El diablo de la botella</h3>
+    <p class="book-pages">28 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-diablo" name="format-diablo" value="color">
+        <label for="color-diablo" class="color-label">Color</label>
+        <input type="radio" id="bw-diablo" name="format-diablo" value="bw" checked>
+        <label for="bw-diablo">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-diablo" class="anillado-checkbox">
+        <label for="anillado-diablo">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+<div class="book" data-title="Los arboles mueres de pie" data-pages="51" data-price-anillado="2000" data-color="false">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\Los arboles mueres de pie.PNG" alt="Portada de Los arboles mueres de pie" class="book-img bw-filter">
+    <h3 class="book-title">Los arboles mueres de pie</h3>
+    <p class="book-pages">102 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-arboles" name="format-arboles" value="color">
+        <label for="color-arboles" class="color-label">Color</label>
+        <input type="radio" id="bw-arboles" name="format-arboles" value="bw" checked>
+        <label for="bw-arboles">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-arboles" class="anillado-checkbox">
+        <label for="anillado-arboles">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+<div class="book" data-title="La chica pajaro" data-pages="38" data-price-anillado="2000" data-color="false">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\La chica pajaro.PNG" alt="Portada de La chica pajaro" class="book-img bw-filter">
+    <h3 class="book-title">La chica pajaro</h3>
+    <p class="book-pages">150 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-chica" name="format-chica" value="color">
+        <label for="color-chica" class="color-label">Color</label>
+        <input type="radio" id="bw-chica" name="format-chica" value="bw" checked>
+        <label for="bw-chica">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-chica" class="anillado-checkbox">
+        <label for="anillado-chica">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+<div class="book" data-title="Mafalda 1" data-pages="32" data-price-anillado="2000" data-color="false">
+    <img src="E:\Descargas (E)\CATALOGO\PORTADAS LIBROS 2024\portada mafalda.PNG" alt="Portada de Mafalda 1" class="book-img bw-filter">
+    <h3 class="book-title">Mafalda 1</h3>
+    <p class="book-pages">128 páginas</p>
+    <p class="book-price"></p>
+    <div class="book-format">
+        <input type="radio" id="color-mafalda" name="format-mafalda" value="color">
+        <label for="color-mafalda" class="color-label">Color</label>
+        <input type="radio" id="bw-mafalda" name="format-mafalda" value="bw" checked>
+        <label for="bw-mafalda">B/N</label>
+    </div>
+    <div class="book-binding">
+        <input type="checkbox" id="anillado-mafalda" class="anillado-checkbox">
+        <label for="anillado-mafalda">Anillado (+$2000)</label>
+    </div>
+    <button class="add-to-cart-btn">Agregar al carrito</button>
+</div>
+    </div>
+<!--FIN CATALOGO -->
+    <hr>
+
+    <div class="cart-section">
+        <h2>🛒 Carrito de Compras</h2>
+        <ul id="cart-items">
+        </ul>
+        <p id="cart-total">Total: $0.00</p>
+        <div class="payment-options">
+           <button id="checkout-mp-button" class="payment-button" >
+                <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.32.1/mercadopago/logo__small.png" alt="Mercado Pago Logo">
+                Finalizar Compra
+            </button>
+
+            <button id="checkout-wa-button" class="payment-button">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
+                Enviar mensaje a WhatsApp
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cartItemsList = document.getElementById('cart-items');
+        const cartTotalDisplay = document.getElementById('cart-total');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        const checkoutMpButton = document.getElementById('checkout-mp-button');
+        const checkoutWaButton = document.getElementById('checkout-wa-button');
+        const searchInput = document.getElementById('search-input');
+        const books = document.querySelectorAll('.book');
+        let cart = [];
+
+        function updateCartDisplay() {
+            cartItemsList.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${item.title} (${item.format}) - $${item.price.toFixed(2)}</span>
+                    <button class="remove-btn" data-title="${item.title}" data-format="${item.format}">Eliminar</button>
+                `;
+                cartItemsList.appendChild(li);
+                total += item.price;
+            });
+            cartTotalDisplay.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function updateBookPrice(bookElement) {
+            const pages = parseFloat(bookElement.dataset.pages);
+            const priceElement = bookElement.querySelector('.book-price');
+            const formatInput = bookElement.querySelector('input[name^="format-"]:checked');
+            const anilladoCheckbox = bookElement.querySelector('.anillado-checkbox');
+            const anilladoPrice = parseFloat(bookElement.dataset.priceAnillado);
+            let basePrice;
+            const imageElement = bookElement.querySelector('.book-img');
+
+            if (formatInput.value === 'bw') {
+                basePrice = pages * 70;
+                imageElement.classList.add('bw-filter');
+            } else {
+                basePrice = pages * 250;
+                imageElement.classList.remove('bw-filter');
+            }
+
+            if (anilladoCheckbox.checked) {
+                basePrice += anilladoPrice;
+            }
+
+            priceElement.textContent = `$${basePrice.toFixed(2)}`;
+        }
+
+        books.forEach(book => {
+            const hasColor = book.dataset.color === "true";
+            const colorInput = book.querySelector('input[value="color"]');
+            const colorLabel = book.querySelector('.color-label');
+            const bwInput = book.querySelector('input[value="bw"]');
+
+            if (!hasColor) {
+                colorInput.disabled = true;
+                colorInput.checked = false;
+                bwInput.checked = true;
+                if (colorLabel) {
+                    colorLabel.textContent = "No disponible a color";
+                    colorLabel.style.color = "gray";
+                }
+            } else {
+                bwInput.checked = true;
+            }
+
+            updateBookPrice(book);
+        });
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const bookElement = button.closest('.book');
+                const title = bookElement.dataset.title;
+                const pages = parseFloat(bookElement.dataset.pages);
+                
+                const selectedFormat = bookElement.querySelector('input[name^="format-"]:checked').value;
+                let finalPrice;
+                let baseFormatText;
+
+                if (selectedFormat === 'bw') {
+                    finalPrice = pages * 70;
+                    baseFormatText = 'Blanco y Negro';
+                } else {
+                    finalPrice = pages * 250;
+                    baseFormatText = 'Color';
+                }
+
+                const anilladoCheckbox = bookElement.querySelector('.anillado-checkbox');
+                const anilladoPrice = parseFloat(bookElement.dataset.priceAnillado);
+                let finalFormat;
+
+                if (anilladoCheckbox.checked) {
+                    finalPrice += anilladoPrice;
+                    finalFormat = `${baseFormatText}, Anillado`;
+                } else {
+                    finalFormat = `${baseFormatText}, Abrochado`;
+                }
+                
+                cart.push({ title, price: finalPrice, format: finalFormat });
+                updateCartDisplay();
+            });
+        });
+
+        cartItemsList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-btn')) {
+                const titleToRemove = event.target.dataset.title;
+                const formatToRemove = event.target.dataset.format;
+                const index = cart.findIndex(item => item.title === titleToRemove && item.format === formatToRemove);
+                if (index !== -1) {
+                    cart.splice(index, 1);
+                    updateCartDisplay();
+                }
+            }
+        });
+
+        checkoutMpButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                const message = `¡Gracias por tu compra!\n\nPara finalizar el pago de $${total.toFixed(2)}, por favor, realiza una transferencia a este alias de Mercado Pago:\n\nAlias: mancux2mp`;
+                alert(message);
+            } else {
+                alert("El carrito está vacío. Por favor, agrega libros antes de finalizar la compra.");
+            }
+        });
+
+        checkoutWaButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                const whatsappNumber = "5491131760731";
+                let message = "¡Hola! Quisiera comprar los siguientes libros:\n\n";
+
+                cart.forEach(item => {
+                    message += `- ${item.title} (${item.format}) - $${item.price.toFixed(2)}\n`;
+                });
+
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                message += `\nTotal: $${total.toFixed(2)}`;
+
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            } else {
+                alert("El carrito está vacío. Por favor, agrega libros antes de enviar el pedido.");
+            }
+        });
+
+        searchInput.addEventListener('keyup', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            books.forEach(book => {
+                const title = book.dataset.title.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    book.style.display = 'block';
+                } else {
+                    book.style.display = 'none';
+                }
+            });
+        });
+
+        books.forEach(book => {
+            const formatInputs = book.querySelectorAll('input[type="radio"]');
+            const anilladoCheckbox = book.querySelector('.anillado-checkbox');
+
+            formatInputs.forEach(input => {
+                input.addEventListener('change', () => updateBookPrice(book));
+            });
+
+            anilladoCheckbox.addEventListener('change', () => updateBookPrice(book));
+        });
+
+// --- Nuevo código para el botón de cambio de tema ---
+        const toggleThemeBtn = document.getElementById('toggle-theme-btn');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+
+        // Función para aplicar el tema guardado
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                toggleThemeBtn.textContent = 'Modo Claro';
+            } else {
+                body.classList.remove('dark-mode');
+                toggleThemeBtn.textContent = 'Modo Oscuro';
+            }
+        };
+
+        // Aplicar el tema al cargar la página
+        if (currentTheme) {
+            applyTheme(currentTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Si no hay preferencia guardada, usar la del sistema operativo
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+
+        // Evento para cambiar el tema al hacer clic en el botón
+        toggleThemeBtn.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'light');
+                applyTheme('light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                applyTheme('dark');
+            }
+        });
+    });
+</script>
+</body>
+</html>
