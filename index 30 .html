@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="img/logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Tienda de Libros</title>
+    <style>
+
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #444;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            padding: 10px;
+            width: 70%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .catalog {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .book {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+            transition: transform 0.2s;
+        }
+        .book:hover {
+            transform: translateY(-5px);
+        }
+        .book-img {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: 0.5s;
+        }
+        .book-img.bw-filter {
+            filter: grayscale(100%);
+        }
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .book-pages {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .book-price {
+            color: #007bff;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+        .book-format {
+            margin-bottom: 10px;
+        }
+        .book-format label, .book-binding label {
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .book-binding {
+            margin: 15px 0;
+        }
+        .add-to-cart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #0056b3;
+        }
+        .cart-section {
+            margin-top: 40px;
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+        }
+        #cart-items {
+            list-style: none;
+            padding: 0;
+        }
+        #cart-items li {
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        #cart-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .payment-button {
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .payment-button img {
+            height: 25px;
+        }
+        #checkout-mp-button {
+            background-color: #00aee4;
+            color: white;
+        }
+        #checkout-mp-button:hover {
+            background-color: #008eb3;
+        }
+        #checkout-wa-button {
+            background-color: #25D366;
+            color: white;
+        }
+        #checkout-wa-button:hover {
+            background-color: #128C7E;
+        }
+
+	/* Estilos para el botón de cambio de tema */
+        #toggle-theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #toggle-theme-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* --- Estilos para el modo oscuro --- */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container {
+            background: #1e1e1e;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode h1, body.dark-mode h2 {
+            color: #bb86fc;
+        }
+
+        body.dark-mode #search-input {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-mode .book {
+            background: #2c2c2c;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .book-pages {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .book-price {
+            color: #89c4ff;
+        }
+        
+        body.dark-mode .cart-section {
+            border-top: 2px solid #555;
+        }
+
+        body.dark-mode #cart-items li {
+            background: #2c2c2c;
+        }
+        
+        body.dark-mode #cart-total span {
+            color: #b0b0b0 !important;
+        }
+
+        body.dark-mode .remove-btn {
+            background-color: #cf6679;
+        }
+
+        body.dark-mode #checkout-mp-button {
+            background-color: #03dac6;
+        }
+        body.dark-mode #checkout-mp-button:hover {
+            background-color: #018786;
+        }
+        body.dark-mode #checkout-wa-button {
+            background-color: #4CAF50;
+        }
+        body.dark-mode #checkout-wa-button:hover {
+            background-color: #388e3c;
+        }
+
+        .book-img:hover {
+            transform: scale(1.2);
+            transition: 0.5s;
+          filter: grayscale(0%);
+        }
+        
+        /* Estilos para el nuevo contenedor de detalles de MP */
+        #mp-details-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #00aee4;
+            border-radius: 5px;
+            background-color: #e6f7ff;
+            color: #007bff;
+            display: none; /* Oculto por defecto */
+        }
+
+        #mp-details-container p {
+            margin: 5px 0;
+        }
+
+        /* Estilos para modo oscuro */
+        body.dark-mode #mp-details-container {
+            background-color: #2c2c2c;
+            color: #bb86fc;
+            border-color: #bb86fc;
+        }
+
+ /* Estilos para el botón de volver arriba */
+        #back-to-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s;
+        }
+
+        #back-to-top-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+ 	<button id="toggle-theme-btn">Modo Oscuro</button>
+    <h1>📚 Tienda de Libros</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Buscar libro...">
+    </div>
+
+    <hr>
+    
+    <h2>Catálogo</h2>
+ <div class="catalog">
+ </div>
+<hr>
+
+    <div class="cart-section">
+        <h2>🛒 Carrito de Compras</h2>
+        <ul id="cart-items">
+        </ul>
+        <p id="cart-total">Total: $0.00</p>
+        <div class="payment-options">
+           <button id="checkout-mp-button" class="payment-button" >
+                <img src="https://http2.mlstatic.com/frontend-assets/ui-navigation/5.32.1/mercadopago/logo__small.png" alt="Mercado Pago Logo">
+                Datos de Mercado Pago
+            </button>
+
+            <button id="checkout-wa-button" class="payment-button">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
+                Enviar mensaje a WhatsApp
+            </button>
+        </div>
+        <div id="mp-details-container"></div>
+    </div>
+</div>
+	<button id="back-to-top-btn" title="Volver arriba">▲</button>
+<script>
+    const booksData = [
+        {
+            title: "Nicanor y la luna",
+            pages: 30,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Nicanor y la luna.png",
+            displayPages: 60
+        },
+        {
+            title: "NTICx Doble faz",
+            pages: 137,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/ntick portada.PNG",
+            displayPages: 274
+        },
+        {
+            title: "NTICx Apaisado",
+            pages: 69,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/ntick portada.PNG",
+            displayPages: 274
+        },
+        {
+            title: "Trabajo y ciudadania Maipue",
+            pages: 71,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Trabajo y ciudadania portada.jpg",
+            displayPages: 142
+        },
+        {
+            title: "Trabajo y ciudadania Apaisado",
+            pages: 36,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Trabajo y ciudadania portada.jpg",
+            displayPages: 142
+        },
+        {
+            title: "Geografia 2 Santillana",
+            pages: 104,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/tapa geografia.PNG",
+            displayPages: 208
+        },
+        {
+            title: "Fisica y quimica 2 sm",
+            pages: 99,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/Fisica quimica 2.PNG",
+            displayPages: 198
+        },
+        {
+            title: "Fisica y quimica 3 sm",
+            pages: 100,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/Fisica quimica 3°.PNG",
+            displayPages: 200
+        },
+        {
+            title: "Historia 3 Estrada",
+            pages: 120,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/Historia 3° estrada.PNG",
+            displayPages: 240
+        },
+        {
+            title: "La tercera palabra",
+            pages: 29,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La Tercera Palabra.JPG",
+            displayPages: 58
+        },
+        {
+            title: "La isla del tesoro",
+            pages: 49,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La isla del tesoro.png",
+            displayPages: 98
+        },
+        {
+            title: "El espejo africano",
+            pages: 34,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Elespejoafricano.JPG",
+            displayPages: 68
+        },
+        {
+            title: "Mi Planta de Naranja lima ",
+            pages: 48,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Mi planta de naranja lima portada 2025.png",
+            displayPages: 96
+        },
+        {
+            title: "El eternauta",
+            pages: 89,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/El eternauta portada.png",
+            displayPages: 353
+        },
+        {
+            title: "De como Romeo se tranzo a Julieta",
+            pages: 28,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/de como romeo se tranzo a julieta portada.JPG",
+            displayPages: 112
+        },
+        {
+            title: "Mitos clasificados 1",
+            pages: 45,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/mitos clasificados 1 portada.JPG",
+            displayPages: 90
+        },
+        {
+            title: "Prohibido suicidarse en primavera",
+            pages: 28,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/prohibido suicidarse en primavera portada.JPG",
+            displayPages: 56
+        },
+        {
+            title: "La entrevista",
+            pages: 43,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La entrevista portada.JPG",
+            displayPages: 86
+        },
+        {
+            title: "Boda de sangre",
+            pages: 19,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/boda de sangre portada.JPG",
+            displayPages: 37
+        },
+        {
+            title: "Amigos por el viento",
+            pages: 19,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/amigos por el viento.png",
+            displayPages: 38
+        },
+        {
+            title: "Ceremonia secreta",
+            pages: 29,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/ceremonia secreta.JPG",
+            displayPages: 57
+        },
+        {
+            title: "Casa de muñecas",
+            pages: 54,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/casa de muñecas.JPG",
+            displayPages: 108
+        },
+        {
+            title: "La casa de Bernarda Alba",
+            pages: 25,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La casa de bernarda alba 2025.png",
+            displayPages: 50
+        },
+        {
+            title: "La increíble y triste historia de la cándida Eréndida y su abuela desalmada",
+            pages: 18,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La increíble y triste historia de la cándida Eréndida  y su abuela desalmada.JPG",
+            displayPages: 36
+        },
+        {
+            title: "Historia 3 Mandioca",
+            pages: 119,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/Historia 3 Mandioca.PNG",
+            displayPages: 238
+        },
+        {
+            title: "Historia 3 Santillana",
+            pages: 118,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/HISTORIA 3 SANTILLANA.JPG",
+            displayPages: 236
+        },
+        {
+            title: "Buscando a mister i la amistad vence al bullyin",
+            pages: 48,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Buscando a mister I.JPG",
+            displayPages: 96
+        },
+        {
+            title: "El diablo de la botella",
+            pages: 14,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/el diablo de la botella .jpeg",
+            displayPages: 28
+        },
+        {
+            title: "Los arboles mueren de pie",
+            pages: 51,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Los arboles mueres de pie.PNG",
+            displayPages: 102
+        },
+        {
+            title: "La chica pajaro",
+            pages: 38,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La chica pajaro.PNG",
+            displayPages: 150
+        },
+        {
+            title: "Mafalda 1",
+            pages: 32,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/portada mafalda.PNG",
+            displayPages: 128
+        },
+        {
+            title: "Biologia 2 santillana",
+            pages: 87,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/BIologia 2 portada.PNG",
+            displayPages: 174
+        },
+        {
+            title: "Construccion ciudadana 1 Santillana",
+            pages: 65,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/cdc 1°.PNG",
+            displayPages: 130
+        },
+        {
+            title: "Construccion ciudadana 2 Santillana",
+            pages: 71,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/ciudadania 2.jpeg",
+            displayPages: 142
+        },
+        {
+            title: "Construccion ciudadana 3 Santillana",
+            pages: 72,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/CIUDADANIA 3 PORTADA.PNG",
+            displayPages: 144
+        },
+        {
+            title: "Historia 2 Santillana",
+            pages: 104,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/portada historia 2°.PNG",
+            displayPages: 208
+        },
+        {
+            title: "Historia 2 Mandioca",
+            pages: 118,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/portada historia 2° Mandioca.PNG",
+            displayPages: 236
+        },
+        {
+            title: "Historia 1 Mandioca",
+            pages: 79,
+            priceAnillado: 2000,
+            color: true,
+            imgSrc: "img/Portada Historia 1° Mandioca COLOR.PNG",
+            displayPages: 158
+        },
+        {
+            title: "Mitos clasificados 2",
+            pages: 24,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/Mitos clasificados  2 tapa.PNG",
+            displayPages: 47
+        },
+        {
+            title: "La isla del tesoro",
+            pages: 49,
+            priceAnillado: 2000,
+            color: false,
+            imgSrc: "img/La isla del tesoro.png",
+            displayPages: 98
+        }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const catalogContainer = document.querySelector('.catalog');
+        const cartItemsList = document.getElementById('cart-items');
+        const cartTotalDisplay = document.getElementById('cart-total');
+        const checkoutMpButton = document.getElementById('checkout-mp-button');
+        const checkoutWaButton = document.getElementById('checkout-wa-button');
+        const searchInput = document.getElementById('search-input');
+        const mpDetailsContainer = document.getElementById('mp-details-container');
+        let cart = [];
+
+        // Función para renderizar los libros
+        function renderBooks(books) {
+            catalogContainer.innerHTML = '';
+            books.forEach(book => {
+                const bookElement = document.createElement('div');
+                bookElement.classList.add('book');
+                bookElement.dataset.title = book.title;
+                bookElement.dataset.pages = book.pages;
+                bookElement.dataset.priceAnillado = book.priceAnillado;
+                bookElement.dataset.color = book.color;
+
+                const hasColor = book.color;
+                const colorDisabled = hasColor ? '' : 'disabled';
+                const colorChecked = hasColor ? '' : 'checked';
+                const colorLabelText = hasColor ? 'Color' : 'No disponible a color';
+                const colorLabelStyle = hasColor ? '' : 'style="color: gray;"';
+
+                bookElement.innerHTML = `
+                    <img src="${book.imgSrc}" alt="Portada de ${book.title}" class="book-img">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-pages">${book.displayPages} páginas</p>
+                    <p class="book-price"></p>
+                    <div class="book-format">
+                        <input type="radio" id="color-${book.title.replace(/\s/g, '-')}" name="format-${book.title.replace(/\s/g, '-')}" value="color" ${colorDisabled}>
+                        <label for="color-${book.title.replace(/\s/g, '-')}" class="color-label" ${colorLabelStyle}>${colorLabelText}</label>
+                        <input type="radio" id="bw-${book.title.replace(/\s/g, '-')}" name="format-${book.title.replace(/\s/g, '-')}" value="bw" ${!hasColor || 'checked'}>
+                        <label for="bw-${book.title.replace(/\s/g, '-')}">B/N</label>
+                    </div>
+                    <div class="book-binding">
+                        <input type="checkbox" id="anillado-${book.title.replace(/\s/g, '-')}" class="anillado-checkbox">
+                        <label for="anillado-${book.title.replace(/\s/g, '-')}">Anillado (+$2000)</label>
+                    </div>
+                    <button class="add-to-cart-btn">Agregar al carrito</button>
+                `;
+                catalogContainer.appendChild(bookElement);
+            });
+            attachEventListeners();
+        }
+
+        // Ordenar los datos de los libros alfabéticamente por título
+        booksData.sort((a, b) => a.title.localeCompare(b.title));
+        
+        // Renderizar el catálogo inicial
+        renderBooks(booksData);
+
+
+        function numeroALetras(num) {
+            const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+            const decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+            const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+            function getDecenas(n) {
+                if (n < 10) return unidades[n];
+                if (n === 10) return 'diez';
+                if (n < 20) return ['once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'][n - 11];
+                if (n < 30) return 'veinti' + (n === 20 ? 'e' : unidades[n % 10]);
+                const decena = decenas[Math.floor(n / 10)];
+                const unidad = n % 10;
+                return decena + (unidad > 0 ? ' y ' + unidades[unidad] : '');
+            }
+
+            function getCentenas(n) {
+                if (n < 100) return getDecenas(n);
+                if (n === 100) return 'cien';
+                return centenas[Math.floor(n / 100)] + (n % 100 > 0 ? ' ' + getDecenas(n % 100) : '');
+            }
+
+            function getMiles(n) {
+                if (n < 1000) return getCentenas(n);
+                const miles = (Math.floor(n / 1000) === 1) ? 'mil' : getCentenas(Math.floor(n / 1000)) + ' mil';
+                return miles + (n % 1000 > 0 ? ' ' + getCentenas(n % 1000) : '');
+            }
+            
+            const integerPart = Math.floor(num);
+            if (integerPart === 0) return 'Cero';
+            
+            let letras = getMiles(integerPart);
+            return letras.charAt(0).toUpperCase() + letras.slice(1);
+        }
+
+        function updateCartDisplay() {
+            cartItemsList.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${item.quantity} x ${item.title} (${item.format}) - $${subtotal.toFixed(2)}</span>
+                    <button class="remove-btn" data-id="${item.id}">Eliminar</button>
+                `;
+                cartItemsList.appendChild(li);
+                total += subtotal;
+            });
+            
+            const totalEnLetras = numeroALetras(total);
+            cartTotalDisplay.innerHTML = `Total: $${total.toFixed(2)} <br> <span style="font-size: 0.8em; color: #555;">(${totalEnLetras} pesos)</span>`;
+        }
+
+        function updateBookPrice(bookElement) {
+            const pages = parseFloat(bookElement.dataset.pages);
+            const priceElement = bookElement.querySelector('.book-price');
+            const formatInput = bookElement.querySelector('input[name^="format-"]:checked');
+            const anilladoCheckbox = bookElement.querySelector('.anillado-checkbox');
+            const anilladoPrice = parseFloat(bookElement.dataset.priceAnillado);
+            let basePrice;
+            const imageElement = bookElement.querySelector('.book-img');
+
+            if (formatInput.value === 'bw') {
+                basePrice = pages * 70;
+                imageElement.classList.add('bw-filter');
+            } else {
+                basePrice = pages * 250;
+                imageElement.classList.remove('bw-filter');
+            }
+
+            if (anilladoCheckbox.checked) {
+                basePrice += anilladoPrice;
+            }
+
+            priceElement.textContent = `$${basePrice.toFixed(2)}`;
+        }
+
+        function attachEventListeners() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            const books = document.querySelectorAll('.book');
+
+            books.forEach(book => {
+                const hasColor = book.dataset.color === "true";
+                const colorInput = book.querySelector('input[value="color"]');
+                const bwInput = book.querySelector('input[value="bw"]');
+                const colorLabel = book.querySelector('.color-label');
+
+                if (!hasColor) {
+                    if(colorInput) colorInput.disabled = true;
+                    if(colorInput) colorInput.checked = false;
+                    if(bwInput) bwInput.checked = true;
+                    if (colorLabel) {
+                        colorLabel.textContent = "No disponible a color";
+                        colorLabel.style.color = "gray";
+                    }
+                } else {
+                    if(bwInput) bwInput.checked = true;
+                }
+
+                updateBookPrice(book);
+            });
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const bookElement = button.closest('.book');
+                    const title = bookElement.dataset.title;
+                    const pages = parseFloat(bookElement.dataset.pages);
+                    
+                    const selectedFormat = bookElement.querySelector('input[name^="format-"]:checked').value;
+                    let unitPrice;
+                    let baseFormatText;
+
+                    if (selectedFormat === 'bw') {
+                        unitPrice = pages * 70;
+                        baseFormatText = 'Blanco y Negro';
+                    } else {
+                        unitPrice = pages * 250;
+                        baseFormatText = 'Color';
+                    }
+
+                    const anilladoCheckbox = bookElement.querySelector('.anillado-checkbox');
+                    const anilladoPrice = parseFloat(bookElement.dataset.priceAnillado);
+                    let finalFormat;
+
+                    if (anilladoCheckbox.checked) {
+                        unitPrice += anilladoPrice;
+                        finalFormat = `${baseFormatText}, Anillado`;
+                    } else {
+                        finalFormat = `${baseFormatText}, Abrochado`;
+                    }
+                    
+                    const itemId = `${title}-${finalFormat}`;
+                    const existingItem = cart.find(item => item.id === itemId);
+
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cart.push({
+                            id: itemId,
+                            title: title,
+                            price: unitPrice,
+                            format: finalFormat,
+                            quantity: 1
+                        });
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            books.forEach(book => {
+                const formatInputs = book.querySelectorAll('input[type="radio"]');
+                const anilladoCheckbox = book.querySelector('.anillado-checkbox');
+
+                formatInputs.forEach(input => {
+                    input.addEventListener('change', () => updateBookPrice(book));
+                });
+
+                if (anilladoCheckbox) {
+                    anilladoCheckbox.addEventListener('change', () => updateBookPrice(book));
+                }
+            });
+        }
+
+        cartItemsList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-btn')) {
+                const idToRemove = event.target.dataset.id;
+                const index = cart.findIndex(item => item.id === idToRemove);
+                if (index !== -1) {
+                    cart.splice(index, 1);
+                    updateCartDisplay();
+                }
+            }
+        });
+
+        checkoutMpButton.addEventListener('click', () => {
+            if (mpDetailsContainer.style.display === 'block') {
+                mpDetailsContainer.style.display = 'none';
+                checkoutWaButton.style.display = 'flex';
+            } else {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                
+                mpDetailsContainer.innerHTML = `
+                    <h4>Datos para el pago con Mercado Pago</h4>
+                    <p><strong>Titular de la cuenta:</strong> Lucas Benjamin Mancuello Morel</p>
+                    <p><strong>CUIT/CUIL:</strong> 20392843974</p>
+                    <p><strong>CVU:</strong> 0000003100026593826739</p>
+                    <p><strong>Alias:</strong> mancux2mp</p>
+                    <p><strong>Total a pagar:</strong> $${total.toFixed(2)}</p>
+                    <p>¡Gracias por tu compra!</p>
+                `;
+                mpDetailsContainer.style.display = 'block';
+                checkoutWaButton.style.display = 'none';
+            }
+        });
+
+        checkoutWaButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                const whatsappNumber = "5491131760731";
+                let message = "¡Hola! Quisiera comprar los siguientes cuadernillos:\n\n";
+
+                cart.forEach(item => {
+                    const subtotal = item.price * item.quantity;
+                    message += `- ${item.quantity} x ${item.title} (${item.format}) - $${subtotal.toFixed(2)}\n`;
+                });
+
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const totalEnLetras = numeroALetras(total);
+                message += `\nTotal: $${total.toFixed(2)} (${totalEnLetras} pesos)`;
+
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            } else {
+                alert("El carrito está vacío. Por favor, agrega libros antes de enviar el pedido.");
+            }
+        });
+
+        searchInput.addEventListener('keyup', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredBooks = booksData.filter(book => book.title.toLowerCase().includes(searchTerm));
+            renderBooks(filteredBooks);
+        });
+
+        const toggleThemeBtn = document.getElementById('toggle-theme-btn');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                toggleThemeBtn.textContent = 'Modo Claro';
+            } else {
+                body.classList.remove('dark-mode');
+                toggleThemeBtn.textContent = 'Modo Oscuro';
+            }
+        };
+
+        if (currentTheme) {
+            applyTheme(currentTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+        
+        const backToTopBtn = document.getElementById('back-to-top-btn');
+        toggleThemeBtn.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'light');
+                applyTheme('light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                applyTheme('dark');
+            }
+        });
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { 
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+</script>
+</body>
+</html>
